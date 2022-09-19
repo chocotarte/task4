@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_one_attached :user_image
+  has_one_attached :profile_image
   
   has_many :books, dependent: :destroy
   
