@@ -4,16 +4,8 @@
     <h2>User info</h2>
     
     <%= form_with model: @user do |f| %>
-      <% if @user.errors.any? %>
-      <h2><%= @user.errors.count %> errors prohibited this obj from being saved:</h2>
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-        <% end %>
-      </ul>
-      <% end %>
+      <%= render partial: "layouts/error_notices", locals: {obj: @user} %>
 
-    
       <%= f.text_field :name, placeholder: "Name"%>
       <%= f.file_field :profile_image, accept: "image/*", placeholder: "Image" %>
       <%= f.text_area :introduction, placeholder: "Introduction" %>

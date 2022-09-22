@@ -1,12 +1,5 @@
 <div class="container px-5 px-sm-0">
-  <% if @newbook.errors.any? %>
-    <h2><%= @newbook.errors.count %> errors prohibited this book from being saved:</h2>
-    <ul>
-      <% @newbook.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  <% end %>
+  <%= render partial: "layouts/error_notices", locals: {obj: @newbook} %>
 
   
   <div class="row">
@@ -31,6 +24,8 @@
                 <td> <%= link_to user_path(book.user_id) do %><%= image_tag book.user.get_profile_image(80, 80) %><% end %> </td>
                 <td> <%= link_to book_path(book.id) do %><%= book.title %><% end %> </td>
                 <td> <%= book.body %> </td>
+                
+                <%= render partial: "users/favorites_and_comments", locals: {book: book} %>
               </tr>
             <% end %>
           <% end %>

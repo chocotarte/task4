@@ -1,12 +1,5 @@
 <div class="container px-5 px-sm-0">
-  <% if @newbook.errors.any? %>
-    <h2><%= @newbook.errors.count %> errors prohibited this book from being saved:</h2>
-    <ul>
-      <% @newbook.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  <% end %>
+  <%# render partial: "layouts/error_notices", locals: {obj: @newbook} %>
 
 
   <div class="row">
@@ -15,22 +8,55 @@
 
     <div class="col-md-8 offset-md-1">
       <h2>Book detail</h2>
+      <%# 本の内容 %>
       <table class="table">
         <tbody>
           <tr>
-            <td> <%= link_to user_path(@book.user_id) do %><%= image_tag @book.user.get_profile_image(100, 100) %><br><%= @book.user.name %><% end %> </td>
-            <td> <%= link_to book_path(params[:id]) do %><%= @book.title %><% end %> </td>
+            <td> <%= link_to user_path(@book.user_id) do %><%= image_tag @book.user.get_profile_image(80, 80) %><br><%= @book.user.name %><% end %> </td>
+            <td> <%= link_to book_path(@book.id) do %><%= @book.title %><% end %> </td>
             <td> <%= @book.body %> </td>
 
             <% if @book.user_id == current_user.id %>
             <td><%= link_to "Edit", edit_book_path(@book.id), class: "btn btn-sm btn-success" %></td>
             <td><%= link_to "Destroy", book_path(@book.id), method: :delete, class: "btn btn-sm btn-danger", "data-confirm" => "本当に消しますか？" %></td>
             <% end %>
+            
+            <%= render partial: "users/favorites_and_comments", locals: {book: @book} %>
 
           </tr>
         </tbody>
       </table>
-
+      
+      <%# コメント欄 %>
+      <table class="table">
+        <tbody>
+          <% if not @comments.blank? %>
+            <% @comments.each do |comment| %>
+            <tr>
+              <td> <%= link_to user_path(comment.user_id) do %><%= image_tag comment.user.get_profile_image(80, 80) %><br><%= comment.user.name %><% end %> </td>
+              <td> <%= comment.comment %></td>
+              <% if comment.user_id == current_user.id %>
+              <td><%= link_to "Destroy", book_book_comment_path(comment.id), method: :delete, class: "btn btn-sm btn-danger"%></td>
+              <% end %>
+            </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+      
+      <%= render partial: "layouts/error_notices", locals: {obj: @book_comment} %>
+      
+      <div>
+        <%= form_with model: [@book, @book_comment] do |f| %>
+        <div class="form-group">
+          <%= f.text_area :comment, rows: "5", class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "送信" %>
+        </div>
+        <% end %>
+      </div>
+      
     </div>
 
   </div>
